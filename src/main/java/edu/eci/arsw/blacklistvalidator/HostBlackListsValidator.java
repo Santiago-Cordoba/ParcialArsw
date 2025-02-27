@@ -6,6 +6,8 @@
 package edu.eci.arsw.blacklistvalidator;
 
 import edu.eci.arsw.spamkeywordsdatasource.HostBlacklistsDataSourceFacade;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,7 +31,9 @@ public class HostBlackListsValidator {
      * @param ipaddress suspicious host's IP address.
      * @return  Blacklists numbers where the given host's IP address was found.
      */
-    public List<Integer> checkHost(String ipaddress){
+    public List<Integer> checkHost(String ipaddress, int nThread){
+
+        ArrayList<BlackListThread> threads = new ArrayList<>();
         
         LinkedList<Integer> blackListOcurrences=new LinkedList<>();
         
@@ -38,7 +42,22 @@ public class HostBlackListsValidator {
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
         
         int checkedListsCount=0;
-        
+
+        int nListPerThread = skds.getRegisteredServersCount() / nThread;
+        int remain = skds.getRegisteredServersCount() % nThread;
+
+        System.out.println("Listas en total :" + nListPerThread);
+
+        System.out.println("Sobrantes para repartir entre los hilos" + remain);
+
+        for(int i = 0; i < nThread ; i++){
+            int numberListThread = nListPerThread + (i < remain? 1 : 0);
+            System.out.println("Hilos totales por hilo" + numberListThread);
+            BlackListThread thread = new BlackListThread(numberListThread, ocurrencesCount, blackListOcurrences);
+            threads.add(thread);
+
+        }
+
         for (int i=0;i<skds.getRegisteredServersCount() && ocurrencesCount<BLACK_LIST_ALARM_COUNT;i++){
             checkedListsCount++;
             
