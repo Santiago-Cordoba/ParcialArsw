@@ -32,6 +32,10 @@ public class BlackListThread extends Thread{
     public int getOcurrencesCount(){
         return ocurrencesCount;
     }
+
+    public int getCheckedList(){
+        return checkedListsCount;
+    }
     @Override
     public void run() {
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();

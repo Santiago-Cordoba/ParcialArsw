@@ -70,6 +70,8 @@ public class HostBlackListsValidator {
 
         ocurrencesCount = getTotalOcurrences(threads);
 
+        checkedListsCount = getTotalListCount(threads);
+
         if (ocurrencesCount>=BLACK_LIST_ALARM_COUNT){
             skds.reportAsNotTrustworthy(ipaddress);
         }
@@ -97,7 +99,11 @@ public class HostBlackListsValidator {
     }
 
     private int getTotalListCount(ArrayList<BlackListThread> threads){
-        
+        int total = 0;
+        for(BlackListThread thread : threads){
+            total += thread.getCheckedList();
+        }
+        return total;
     }
     
     
