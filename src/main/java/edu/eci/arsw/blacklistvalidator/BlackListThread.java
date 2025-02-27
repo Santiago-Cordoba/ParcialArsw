@@ -20,6 +20,7 @@ public class BlackListThread extends Thread{
 
 
 
+
     public BlackListThread(int nList, int ocurrencesCount, int startT, String ipaddress,  LinkedList<Integer> blackListOcurrences, int checkedListsCount) {
         this.nList = nList;
         this.ocurrencesCount = ocurrencesCount;
@@ -41,7 +42,7 @@ public class BlackListThread extends Thread{
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
 
 
-        System.out.println("IP" + ipaddress + " ocurrencesCount: " + ocurrencesCount + " start: " + startT + "nList: " + nList);
+
         for (int i = startT; i < nList && ocurrencesCount < BLACK_LIST_ALARM_COUNT; i++) {
             checkedListsCount++;
             if (skds.isInBlackListServer(i, ipaddress)){

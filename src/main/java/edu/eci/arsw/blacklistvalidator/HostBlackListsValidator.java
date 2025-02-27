@@ -46,20 +46,15 @@ public class HostBlackListsValidator {
         int nListPerThread = skds.getRegisteredServersCount() / nThread;
         int remain = skds.getRegisteredServersCount() % nThread;
 
-        System.out.println("Listas en total :" + nListPerThread);
-
-        System.out.println("Sobrantes para repartir entre los hilos: " + remain);
 
         int start = 0;
         for(int i = 0; i < nThread ; i++){
             int numberListThread = nListPerThread + (i < remain? 1 : 0);
-            System.out.println("Listas totales por hilo: " + numberListThread);
             BlackListThread thread = new BlackListThread(start + numberListThread,  ocurrencesCount, start, ipaddress, blackListOcurrences, checkedListsCount);
-            System.out.println("------- " + numberListThread + " start: "+  start + " nList: " + numberListThread + " ocurrencesCount: " + ocurrencesCount + " blackListOcurrene: " + blackListOcurrences + " ipaddress: " + ipaddress);
             threads.add(thread);
             thread.start();
             start += numberListThread;
-            System.out.println("siguiente tope: " + numberListThread);
+
 
         }
 
@@ -67,6 +62,7 @@ public class HostBlackListsValidator {
         for(BlackListThread thread : threads){
             thread.join();
         }
+
 
         ocurrencesCount = getTotalOcurrences(threads);
 
@@ -80,8 +76,10 @@ public class HostBlackListsValidator {
         }
 
 
-
-
+        /**
+         * BONO
+         * Aca se esta imprimiendo de manera que se muestra el total de listas que se revisaron entre todos los hilos
+         */
         LOG.log(Level.INFO, "Checked Black Lists:{0} of {1}", new Object[]{checkedListsCount, skds.getRegisteredServersCount()});
 
         return blackListOcurrences;
